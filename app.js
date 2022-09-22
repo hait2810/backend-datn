@@ -2,6 +2,7 @@ import  express  from "express";
 import mongoose from "mongoose";
 import cors from 'cors'
 import routerHome from "./routes/home";
+import routerUser from "./routes/user";
 
 
 const url =
@@ -20,7 +21,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(routerHome)
-
+app.use(routerUser)
 
 
 
