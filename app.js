@@ -4,6 +4,7 @@ import cors from "cors";
 import routerHome from "./routes/home";
 import routerUser from "./routes/user";
 import routerPost from "./routes/post";
+import routerCatpost from "./routes/catePost";
 
 const url =
   "mongodb+srv://datn_433:tg7aERk5yF9Jes9V@atlascluster.nyvzdzm.mongodb.net/?retryWrites=true&w=majority";
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(routerHome);
 app.use(routerUser);
 app.use(routerPost);
+app.use(routerCatpost);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
