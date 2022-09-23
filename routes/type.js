@@ -8,10 +8,10 @@ import {
 } from "../controllers/type";
 const router = express.Router();
 
-// router.post("/type", createTypes);
-router.get("/type", listTypes);
-router.get("/type/:id", readTypes);
-router.delete("/type/:id", removeTypes);
-router.put("/type/:id", updateTypes);
+router.post("/types", createTypes);
+router.get("/types", listTypes);
+router.get("/types/:id", readTypes);
+router.delete("/types/:id", removeTypes);
+router.put("/types/:id", updateTypes);
 
 export default router;

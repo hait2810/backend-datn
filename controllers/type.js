@@ -2,8 +2,8 @@ import Types from "../models/type";
 
 export const createTypes = async (req, res) => {
   try {
-    const Typea = await new Types(req.body).save();
-    res.json(Typea);
+    const Typess = await new Types(req.body).save();
+    res.json(Typess);
   } catch (error) {
     res.status(400).json({
       message: "Không thêm được bài viết",
