@@ -4,6 +4,7 @@ import cors from "cors";
 import routerHome from "./routes/home";
 import routerUser from "./routes/user";
 import routerPost from "./routes/post";
+import routerType from "./routes/type";
 import routerCatpost from "./routes/catePost";
 
 const url =
@@ -25,6 +26,7 @@ app.use(routerHome);
 app.use(routerUser);
 app.use(routerPost);
 app.use(routerCatpost);
+app.use(routerType);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
