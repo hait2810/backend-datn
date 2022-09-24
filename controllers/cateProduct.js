@@ -1,4 +1,5 @@
 import CateProducts from "../models/cateProduct";
+import Product from "../models/product";
 export const createCate = async (req, res) => {
   try {
     const Cateproduct = await new CateProducts(req.body).save();
@@ -26,8 +27,10 @@ export const readCate = async (req, res) => {
     const Cateproduct = await CateProducts.findOne({
       _id: req.params.id,
     }).exec();
+    const Products = await Product.find({ categoryId: Cateproduct._id }).exec();
     res.json({
       Cateproduct,
+      Products,
     });
   } catch (error) {
     res.status(400).json({
