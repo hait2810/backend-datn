@@ -5,6 +5,8 @@ import routerHome from "./routes/home";
 import routerUser from "./routes/user";
 import routerPost from "./routes/post";
 import routerCatpost from "./routes/catePost";
+import routerCateproduct from "./routes/cateProduct";
+import routerProduct from "./routes/product";
 
 const url =
   "mongodb+srv://datn_433:tg7aERk5yF9Jes9V@atlascluster.nyvzdzm.mongodb.net/?retryWrites=true&w=majority";
@@ -25,6 +27,8 @@ app.use(routerHome);
 app.use(routerUser);
 app.use(routerPost);
 app.use(routerCatpost);
+app.use(routerCateproduct);
+app.use(routerProduct);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
