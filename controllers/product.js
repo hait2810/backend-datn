@@ -13,9 +13,14 @@ export const createProduct = async (req, res) => {
 
 export const listProduct = async (req, res) => {
   try {
-    const products = await Product.find().populate("categoryId");
-    res.json(products);
+    const body = req.body;
+    console.log(body);
+    const count = await Product.find({}).count();
+    const skip = body.limit * (body.page - 1);
+    const products = await Product.find({}).skip(1).limit(2);
+    res.json({ products, count });
   } catch (error) {
+    console.log(error);
     res.status(400).json({
       message: "Không hiển thị bài viết",
     });
