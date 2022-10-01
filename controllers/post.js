@@ -13,8 +13,14 @@ export const createPosts = async (req, res) => {
 
 export const listPosts = async (req, res) => {
   try {
-    const Post = await Posts.find().populate("categoryId");
-    res.json(Post);
+    const body = req.body;
+    const skip = body.limit * (body.page - 1);
+    const count = await Posts.find({}).count();
+    const Post = await Posts.find({})
+      .skip(skip)
+      .limit(body.limit)
+      .populate("categoryId");
+    res.json({ Post, count });
   } catch (error) {
     res.status(400).json({
       message: "Không hiển thị bài viết",

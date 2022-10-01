@@ -5,6 +5,9 @@ const CatePostSchema = new Schema(
       type: String,
       require: true,
     },
+    image: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
