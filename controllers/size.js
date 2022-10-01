@@ -5,7 +5,7 @@ export const createSize = async (req, res) => {
     res.json(Sizes);
   } catch (error) {
     res.status(400).json({
-      message: "Không thêm được màu",
+      message: "Không thêm được kích cỡ",
     });
   }
 };
@@ -16,7 +16,7 @@ export const listSize = async (req, res) => {
     res.json(Sizes);
   } catch (error) {
     res.status(400).json({
-      message: "Không hiển thị màu",
+      message: "Không hiển thị kích cỡ",
     });
   }
 };
@@ -27,7 +27,7 @@ export const readSize = async (req, res) => {
     res.json(Sizes);
   } catch (error) {
     res.status(400).json({
-      message: "Không hiển thị màu",
+      message: "Không hiển thị kích cỡ",
     });
   }
 };
