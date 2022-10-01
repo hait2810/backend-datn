@@ -6,7 +6,7 @@ export const createProduct = async (req, res) => {
     res.json(products);
   } catch (error) {
     res.status(400).json({
-      message: "Không thêm được bài viết",
+      message: "Không thêm được sản phẩm",
     });
   }
 };
@@ -14,15 +14,17 @@ export const createProduct = async (req, res) => {
 export const listProduct = async (req, res) => {
   try {
     const body = req.body;
-    console.log(body);
     const count = await Product.find({}).count();
     const skip = body.limit * (body.page - 1);
-    const products = await Product.find({}).skip(1).limit(2);
+    const products = await Product.find({})
+      .skip(skip)
+      .limit(body.limit)
+      .populate("categoryId");
     res.json({ products, count });
   } catch (error) {
     console.log(error);
     res.status(400).json({
-      message: "Không hiển thị bài viết",
+      message: "Không hiển thị sản phẩm",
     });
   }
 };
@@ -33,7 +35,7 @@ export const readProduct = async (req, res) => {
     res.json(Products);
   } catch (error) {
     res.status(400).json({
-      message: "Không hiển thị bài viết",
+      message: "Không hiển thị sản phẩm",
     });
   }
 };

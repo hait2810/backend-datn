@@ -1,14 +1,15 @@
 import mongoose, { Schema, ObjectId } from "mongoose";
-const CateProductSchema = new Schema(
+const ColorSchema = new Schema(
   {
     name: {
       type: String,
       require: true,
     },
-    image: {
+    colorCode: {
       type: String,
+      require: true,
     },
   },
   { timestamps: true }
 );
-export default mongoose.model("CategoryProduct", CateProductSchema);
+export default mongoose.model("Color", ColorSchema);
