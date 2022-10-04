@@ -72,16 +72,12 @@ export const updateQuantityProduct = async (req, res) => {
   try {
     const { _id, color, size, quantity } = req.body;
 
-    const product = await Product.findById({
-      _id,
-      type: { $elemMatch: { color: color, size: size } },
-    }).exec();
-    
-    console.log('old product', product);
+    const product = await Product.findById(_id).exec();
+
     const newType = product.type.map((type) => {
       if (type.color === color && type.size === size) {
         if (quantity > type.quantity) {
-          throw 'Error quantity'
+          throw "Error quantity";
         }
         return {
           ...type,
@@ -91,8 +87,10 @@ export const updateQuantityProduct = async (req, res) => {
       return type;
     });
     product.type = newType;
-    const resp = await Product.findByIdAndUpdate(_id, product).exec();
-    console.log('new product', resp)
+    const resp = await Product.findByIdAndUpdate(_id, product, {
+      returnDocument: "after",
+    }).exec();
+    
     res.json(resp);
   } catch (error) {
     res.status(400).json({ message: error });
