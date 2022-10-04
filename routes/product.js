@@ -5,6 +5,7 @@ import {
   readProduct,
   removeProduct,
   updateProduct,
+  updateQuantityProduct,
 } from "../controllers/product";
 
 const router = express.Router();
@@ -14,5 +15,6 @@ router.post("/products", listProduct);
 router.get("/product/:id", readProduct);
 router.delete("/product/:id", removeProduct);
 router.put("/product/:id", updateProduct);
+router.put("/updatequantity/", updateQuantityProduct);
 
 export default router;
