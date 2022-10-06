@@ -17,3 +17,11 @@ export const editOrder = async (req,res) => {
         res.status(400).json({message: error})
     }
 }
+export const listOrder = async (req,res) => {
+    try {
+        const cart = await Cart.find().exec()
+        res.json(cart)
+    } catch (error) {
+        res.status(400).json({message: error})
+    }
+}
