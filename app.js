@@ -10,6 +10,7 @@ import routerProduct from "./routes/product";
 import routerSize from "./routes/size";
 import routerColor from "./routes/color";
 import routerSlider from "./routes/slider";
+import routerCarts from "./routes/orders";
 
 const url =
   "mongodb+srv://datn_433:tg7aERk5yF9Jes9V@atlascluster.nyvzdzm.mongodb.net/?retryWrites=true&w=majority";
@@ -35,7 +36,7 @@ app.use(routerProduct);
 app.use(routerSlider);
 app.use(routerSize);
 app.use(routerColor);
-
+app.use(routerCarts);
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log("Đang chạy cổng", PORT);
