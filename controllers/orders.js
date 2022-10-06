@@ -25,3 +25,11 @@ export const listOrder = async (req,res) => {
         res.status(400).json({message: error})
     }
 }
+export const removeOrder = async (req,res) => {
+    try {
+        const cart = await Cart.findByIdAndRemove({_id: req.params.id}).exec()
+        res.json(cart);
+    } catch (error) {
+        res.status(400).json({message: error})
+    }
+}
