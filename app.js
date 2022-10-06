@@ -9,6 +9,7 @@ import routerCateproduct from "./routes/cateProduct";
 import routerProduct from "./routes/product";
 import routerSize from "./routes/size";
 import routerColor from "./routes/color";
+import routerSlider from "./routes/slider";
 
 const url =
   "mongodb+srv://datn_433:tg7aERk5yF9Jes9V@atlascluster.nyvzdzm.mongodb.net/?retryWrites=true&w=majority";
@@ -31,6 +32,7 @@ app.use(routerPost);
 app.use(routerCatpost);
 app.use(routerCateproduct);
 app.use(routerProduct);
+app.use(routerSlider);
 app.use(routerSize);
 app.use(routerColor);
 
