@@ -1,4 +1,4 @@
-import Cart from '../models/carts'
+import Cart from '../models/orders'
 
 
 export const addNewOrder = async (req,res) => {
