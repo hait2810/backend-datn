@@ -18,6 +18,9 @@ const ProductSchema = new Schema(
     type: {
       type: [{}],
     },
+    subimg: {
+      type: []
+    },
     categoryId: {
       type: ObjectId,
       ref: "CategoryProduct",
