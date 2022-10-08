@@ -9,6 +9,7 @@ import routerCateproduct from "./routes/cateProduct";
 import routerProduct from "./routes/product";
 import routerSize from "./routes/size";
 import routerColor from "./routes/color";
+import routerSlider from "./routes/slider";
 import routerCarts from "./routes/orders";
 
 const url =
@@ -32,9 +33,10 @@ app.use(routerPost);
 app.use(routerCatpost);
 app.use(routerCateproduct);
 app.use(routerProduct);
+app.use(routerSlider);
 app.use(routerSize);
 app.use(routerColor);
-app.use(routerCarts)
+app.use(routerCarts);
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log("Đang chạy cổng", PORT);
