@@ -17,6 +17,14 @@ export const editOrder = async (req,res) => {
         res.status(400).json({message: error})
     }
 }
+export const readCart = async (req,res) => {
+    try {
+        const cart = await Cart.findById({_id: req.params.id}).exec()
+        res.json(cart)
+    } catch (error) {
+        res.status(400).json({message: error})
+    }
+}
 export const listOrder = async (req,res) => {
     try {
         const cart = await Cart.find().exec()
