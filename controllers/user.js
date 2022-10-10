@@ -97,3 +97,22 @@ export const updateUsers = async (req, res) => {
     });
   }
 };
+
+export const readUser = async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params.id }).exec();
+    res.json({
+      status: user.status,
+      id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "Không hiển thị người dùng ",
+    });
+  }
+};
