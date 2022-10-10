@@ -16,10 +16,7 @@ export const listSliders = async (req, res) => {
     const body = req.body;
     const skip = body.limit * (body.page - 1);
     const count = await Sliders.find({}).count();
-    const Slider = await Sliders.find({})
-      .skip(skip)
-      .limit(body.limit)
-      .populate("categoryId");
+    const Slider = await Sliders.find({}).skip(skip).limit(body.limit);
     res.json({ Slider, count });
   } catch (error) {
     res.status(400).json({
