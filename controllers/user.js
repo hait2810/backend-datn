@@ -47,12 +47,53 @@ export const listUser = async (req, res) => {
     const body = req.body;
     const count = await User.find({}).count();
     const skip = body.limit * (body.page - 1);
-    const Users = await User.find({}).skip(skip).limit(body.limit);
-    res.json({ Users, count });
+    const users = await User.find(
+      {},
+      {
+        fullname: 1,
+        email: 1,
+        id_: 1,
+        status: 1,
+        role: 1,
+        createdAt: 1,
+        updatedAt: 1,
+      }
+    )
+      .skip(skip)
+      .limit(body.limit);
+
+    res.json({
+      users,
+      count,
+    });
   } catch (error) {
     console.log(error);
     res.status(400).json({
-      message: "Không hiển thị sản phẩm",
+      message: "Không hiển thị ",
+    });
+  }
+};
+
+export const updateUsers = async (req, res) => {
+  console.log(req);
+  try {
+    const user = await User.findOneAndUpdate(
+      { _id: req.params.id },
+      { status: req.body.status, fullname: req.body.fullname },
+      { new: true }
+    ).exec();
+    res.json({
+      status: user.status,
+      id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "Không edit được",
     });
   }
 };
