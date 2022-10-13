@@ -18,6 +18,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "active",
     },
+    img: {
+      type: String,
+    },
     role: {
       type: Number,
       default: 0,
