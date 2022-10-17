@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import Product from "../models/product";
 
 export const createProduct = async (req, res) => {
@@ -96,3 +97,34 @@ export const updateQuantityProduct = async (req, res) => {
     res.status(400).json({ message: error });
   }
 };
+
+
+
+
+export const updateType = async (req,res) => {
+          try {
+          const product = await Product.findOne({_id: req.params.idp}).exec()
+          const newType = product.type.map((item) => {
+            if(JSON.stringify(item._id) === JSON.stringify(req.params.idt)) {
+              if(req.body.quantity <= 0) {
+                throw "Quantity lớn hơn 0"
+              }
+              return {
+                ...item,
+                color: req.body.color,
+                size: req.body.size,
+                quantity: req.body.quantity,
+              }
+            }
+            return item
+            
+          })
+          product.type = newType      
+         const update = await Product.findByIdAndUpdate({_id: req.params.idp}, product, {
+          returnDocument: "after"
+         }).exec()
+         res.json(update)
+          } catch (error) {
+            res.json(error)
+          }
+}

@@ -15,24 +15,22 @@ const ProductSchema = new Schema(
       type: String,
       require: true,
     },
-    type: {
-      type: [
-        {
-          color: {
-            type: String,
-            require: true
-          },
-          size: {
-            type: String,
-            require: true
-          },
-          quantity: {
-            type: Number,
-            require: true
-          }
+    type: [
+      {
+        color: {
+          type: String,
+          require: true
+        },
+        size: {
+          type: String,
+          require: true
+        },
+        quantity: {
+          type: Number,
+          require: true
         }
-      ],
-    },
+      }
+    ],
     subimg: {
       type: []
     },
