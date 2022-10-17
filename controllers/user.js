@@ -1,12 +1,56 @@
 import User from "../models/user";
+import nodemailer from "nodemailer";
 
+const sendVerifyEmail = async (name, email, userID) => {
+  try {
+    let transporter = nodemailer.createTransport({
+      host: process.env.HOST,
+      port: process.env.EMAIL_PORT,
+      secure: process.env.SECURE,
+      auth: {
+        user: process.env.USER,
+        pass: process.env.PASS
+      }
+   });
+
+   const mailOptions = {
+    from: `The Man Shop ${process.env.USER}`,
+    to: email,
+    subject: "Xác thực tài khoản The Man Shop",
+    html: `<p> Xin chào ${name} vui lòng nhấp vào <a href="${process.env.BASE_URL}users/verify/${userID}"> Xác thực </a> để kích hoạt tài khoản ! </p>`
+
+};
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Email not sent !");
+        console.log(error);
+      } else {
+        console.log("Email has been sent:- ", info.response);
+      }
+    })
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const verifyEmail = async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params.id });
+		if (!user) return res.status(400).send({ message: "Invalid link" });
+    await User.updateOne({_id: user._id}, { $set: { verified: true }});
+    console.log("Email verified successfully !");
+  } catch (error) {
+    console.log("Email not verified", error);
+  }
+}
 export const signup = async (req, res) => {
   const { fullname, email, password } = req.body;
   try {
-    const exitsUser = await User.findOne({ email }).exec();
+    let exitsUser = await User.findOne({ email }).exec();
     if (exitsUser) {
       return res.status(400).json({ message: "Email đã tồn tại" });
     }
+
     const user = await User({ fullname, email, password }).save();
     res.json({
       status: 200,
@@ -14,7 +58,12 @@ export const signup = async (req, res) => {
       fullname: user.fullname,
       email: user.email,
       role: user.role,
+      verified: user.verified
     });
+
+    if (user) {
+      sendVerifyEmail(fullname, email, user._id);
+    }
   } catch (error) {
     res.status(400).json({ message: "Lỗi" });
   }
