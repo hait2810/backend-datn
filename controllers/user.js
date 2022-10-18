@@ -1,5 +1,6 @@
 import User from "../models/user";
 import nodemailer from "nodemailer";
+import jwt from "jsonwebtoken";
 
 const sendVerifyEmail = async (name, email, userID) => {
   try {
@@ -9,17 +10,16 @@ const sendVerifyEmail = async (name, email, userID) => {
       secure: process.env.SECURE,
       auth: {
         user: process.env.USER,
-        pass: process.env.PASS
-      }
-   });
+        pass: process.env.PASS,
+      },
+    });
 
-   const mailOptions = {
-    from: `The Man Shop ${process.env.USER}`,
-    to: email,
-    subject: "Xác thực tài khoản The Man Shop",
-    html: `<p> Xin chào ${name} vui lòng nhấp vào <a href="${process.env.BASE_URL}users/verify/${userID}"> Xác thực </a> để kích hoạt tài khoản ! </p>`
-
-};
+    const mailOptions = {
+      from: `The Man Shop ${process.env.USER}`,
+      to: email,
+      subject: "Xác thực tài khoản The Man Shop",
+      html: `<p> Xin chào ${name} vui lòng nhấp vào <a href="${process.env.BASE_URL}users/verify/${userID}"> Xác thực </a> để kích hoạt tài khoản ! </p>`,
+    };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log("Email not sent !");
@@ -27,22 +27,22 @@ const sendVerifyEmail = async (name, email, userID) => {
       } else {
         console.log("Email has been sent:- ", info.response);
       }
-    })
+    });
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 export const verifyEmail = async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.params.id });
-		if (!user) return res.status(400).send({ message: "Invalid link" });
-    await User.updateOne({_id: user._id}, { $set: { verified: true }});
+    if (!user) return res.status(400).send({ message: "Invalid link" });
+    await User.updateOne({ _id: user._id }, { $set: { verified: true } });
     console.log("Email verified successfully !");
   } catch (error) {
     console.log("Email not verified", error);
   }
-}
+};
 export const signup = async (req, res) => {
   const { fullname, email, password } = req.body;
   try {
@@ -79,14 +79,21 @@ export const signin = async (req, res) => {
       return res.status(400).json({ message: "Sai password !" });
     }
     if (user.verified === false) {
-      return res.status(400).json({ message: "Vui lòng kiểm tra email xác thực tài khoản !", verified: false });
+      return res.status(400).json({
+        message: "Vui lòng kiểm tra email xác thực tài khoản !",
+        verified: false,
+      });
     }
+    const token = jwt.sign({ email }, "Theman", { expiresIn: "3h" });
     res.json({
-      status: 200,
-      id: user._id,
-      fullname: user.fullname,
-      email: user.email,
-      role: user.role,
+      token,
+      users: {
+        status: 200,
+        id: user._id,
+        fullname: user.fullname,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (error) {
     res.status(400).json({ message: "Lỗi" });
