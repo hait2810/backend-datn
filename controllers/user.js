@@ -58,7 +58,6 @@ export const signup = async (req, res) => {
       fullname: user.fullname,
       email: user.email,
       role: user.role,
-      verified: user.verified
     });
 
     if (user) {
@@ -74,10 +73,13 @@ export const signin = async (req, res) => {
   try {
     const user = await User.findOne({ email }).exec();
     if (!user) {
-      return res.status(400).json({ message: "Email không tồn tại" });
+      return res.status(400).json({ message: "Email không tồn tại !" });
     }
     if (!user.authenticate(password)) {
-      return res.status(400).json({ message: "Sai password" });
+      return res.status(400).json({ message: "Sai password !" });
+    }
+    if (user.verified === false) {
+      return res.status(400).json({ message: "Vui lòng kiểm tra email xác thực tài khoản !", verified: false });
     }
     res.json({
       status: 200,
