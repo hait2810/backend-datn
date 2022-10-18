@@ -11,6 +11,18 @@ const ProductSchema = new Schema(
     price: {
       type: Number,
     },
+    height: {
+      type: Number,
+    },
+    width: {
+      type: Number,
+    },
+    length: {
+      type: Number,
+    },
+    weight: {
+      type: Number,
+    },
     desc: {
       type: String,
       require: true,
@@ -19,20 +31,20 @@ const ProductSchema = new Schema(
       {
         color: {
           type: String,
-          require: true
+          require: true,
         },
         size: {
           type: String,
-          require: true
+          require: true,
         },
         quantity: {
           type: Number,
-          require: true
-        }
-      }
+          require: true,
+        },
+      },
     ],
     subimg: {
-      type: []
+      type: [],
     },
     categoryId: {
       type: ObjectId,
