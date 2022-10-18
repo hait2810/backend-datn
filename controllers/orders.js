@@ -1,8 +1,8 @@
-import Cart from "../models/orders";
+import Order from "../models/orders";
 
 export const addNewOrder = async (req, res) => {
   try {
-    const cart = await Cart(req.body).save();
+    const cart = await Order(req.body).save();
     res.json(cart);
   } catch (error) {
     res.status(400).json({ message: error });
@@ -10,7 +10,7 @@ export const addNewOrder = async (req, res) => {
 };
 export const editOrder = async (req, res) => {
   try {
-    const cart = await Cart.findByIdAndUpdate(
+    const cart = await Order.findByIdAndUpdate(
       { _id: req.params.id },
       req.body,
       { returnDocument: "after" }
@@ -22,7 +22,7 @@ export const editOrder = async (req, res) => {
 };
 export const readCart = async (req, res) => {
   try {
-    const cart = await Cart.findById({ _id: req.params.id }).exec();
+    const cart = await Order.findById({ _id: req.params.id }).exec();
     res.json(cart);
   } catch (error) {
     res.status(400).json({ message: error });
@@ -30,7 +30,7 @@ export const readCart = async (req, res) => {
 };
 export const listOrder = async (req, res) => {
   try {
-    const cart = await Cart.find()
+    const cart = await Order.find()
       .sort({
         createdAt: "desc",
       })
@@ -42,7 +42,7 @@ export const listOrder = async (req, res) => {
 };
 export const removeOrder = async (req, res) => {
   try {
-    const cart = await Cart.findByIdAndRemove({ _id: req.params.id }).exec();
+    const cart = await Order.findByIdAndRemove({ _id: req.params.id }).exec();
     res.json(cart);
   } catch (error) {
     res.status(400).json({ message: error });

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const cartSchema = new mongoose.Schema(
+const ordersSchema = new mongoose.Schema(
   {
     product: {
       type: [],
@@ -22,4 +22,4 @@ const cartSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Cart", cartSchema);
+export default mongoose.model("Order", ordersSchema);
