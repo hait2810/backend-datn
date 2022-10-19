@@ -11,10 +11,19 @@ export const addCart = async (req,res) => {
 }
 export const getCart = async (req,res) => {
         try {
-            const user = await User.findOne({_id: req.params.id}).exec()
-            const cart = await Carts.find({userID: user._id}).exec()
+            const cart = await Carts.findOne({userID: req.params.id}).exec()
             res.json(cart)
         } catch (error) {
             res.status(400).json(error)
         }
+}
+export const updateCart = async (req,res) => {
+  try {
+    const cart = await Carts.findByIdAndUpdate({userID: req.params.id}, req.body, {
+        returnDocument: "after"
+    }).exec()
+    res.json(cart)
+  } catch (error) {
+      res.status(400).json(error)
+  }
 }
