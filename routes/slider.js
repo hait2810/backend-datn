@@ -6,13 +6,14 @@ import {
   removeSliders,
   updateSliders,
 } from "../controllers/slider";
+import { isAdmin, isAuth, requireSignin } from "../middlewares/checkAuth";
 
 const router = express.Router();
 
-router.post("/slider", createSliders);
+router.post("/slider", requireSignin, isAuth, isAdmin, createSliders);
 router.post("/sliders", listSliders);
 router.get("/slider/:id", readSliders);
-router.delete("/slider/:id", removeSliders);
-router.put("/slider/:id", updateSliders);
+router.delete("/slider/:id", requireSignin, isAuth, isAdmin, removeSliders);
+router.put("/slider/:id", requireSignin, isAuth, isAdmin, updateSliders);
 
 export default router;
