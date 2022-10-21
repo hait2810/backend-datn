@@ -19,11 +19,20 @@ export const getCart = async (req,res) => {
 }
 export const updateCart = async (req,res) => {
   try {
-    const cart = await Carts.findByIdAndUpdate({userID: req.params.id}, req.body, {
+    const cart = await Carts.findByIdAndUpdate({_id: req.params.id}, req.body, {
         returnDocument: "after"
     }).exec()
     res.json(cart)
   } catch (error) {
       res.status(400).json(error)
+  }
+}
+export const removeCart = async (req,res) => {
+  try {
+      const cart = await Carts.findByIdAndRemove({_id: req.params.id}).exec() 
+      res.json(cart)
+  } catch (error) {
+      res.status(400).json(error)
+
   }
 }
