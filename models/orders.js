@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose,  {ObjectId} from "mongoose";
 
 const ordersSchema = new mongoose.Schema(
   {
@@ -10,14 +10,27 @@ const ordersSchema = new mongoose.Schema(
       type: {},
       require: true,
     },
-    status: {
+    userID: {
+      type: ObjectId,
+      ref: "User"
+    },
+    fee: {
       type: Number,
-      default: 0,
+      require: true
+    },
+    productmonney: {
+      type: Number,
+      require: true
     },
     totalprice: {
       type: Number,
       require: true,
     },
+    status: {
+      type: Number,
+      default: 0,
+    },
+    
   },
   { timestamps: true }
 );

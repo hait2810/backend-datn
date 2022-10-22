@@ -20,7 +20,7 @@ export const editOrder = async (req, res) => {
     res.status(400).json({ message: error });
   }
 };
-export const readCart = async (req, res) => {
+export const readOrder = async (req, res) => {
   try {
     const cart = await Order.findById({ _id: req.params.id }).exec();
     res.json(cart);

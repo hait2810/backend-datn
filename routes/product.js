@@ -19,9 +19,6 @@ router.delete("/product/:id", requireSignin, isAuth, isAdmin, removeProduct);
 router.put("/product/:id", requireSignin, isAuth, isAdmin, updateProduct);
 router.put(
   "/updatequantity/",
-  requireSignin,
-  isAuth,
-  isAdmin,
   updateQuantityProduct
 );
 router.put("/updatetype/:idt/:idp", updateType);
