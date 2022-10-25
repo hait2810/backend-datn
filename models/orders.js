@@ -22,6 +22,9 @@ const ordersSchema = new mongoose.Schema(
       type: Number,
       require: true
     },
+    order_code: {
+      type: String
+    },
     totalprice: {
       type: Number,
       require: true,
