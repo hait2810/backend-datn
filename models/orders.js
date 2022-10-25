@@ -18,6 +18,22 @@ const ordersSchema = new mongoose.Schema(
       type: Number,
       require: true
     },
+    weight: {
+      type: Number,
+      require: true
+    },
+    length: {
+      type: Number,
+      require: true
+    },
+    width: {
+      type: Number,
+      require: true
+    },
+    height: {
+      type: Number,
+      require: true
+    },
     productmonney: {
       type: Number,
       require: true
