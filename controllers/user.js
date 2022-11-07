@@ -68,6 +68,18 @@ export const signup = async (req, res) => {
   }
 };
 
+export const forgetPassword = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) return res.status(400).json({ message: "Email không tồn tại" });
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).json({ message: "User không tồn tại" });
+
+  const alreadyHasToken = await passwordResetToken.findOne({ owner: user._id });
+  if (alreadyHasToken) return res.status(400).json({ message: "Chỉ sau một giờ, bạn có thể yêu cầu một mã thông báo khác!" });
+
+};
+
 export const signin = async (req, res) => {
   const { email, password } = req.body;
   try {
