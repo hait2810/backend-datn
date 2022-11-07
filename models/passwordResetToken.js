@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "crypto";
-
+import bcrypt from "bcrypt";
 const passwordReserTokenSchema = mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,

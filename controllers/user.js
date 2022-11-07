@@ -1,7 +1,8 @@
 import User from "../models/user";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
-
+import passwordResetToken from '../models/passwordResetToken';
+import { generateRandomByte } from '../utils/helper';
 const sendVerifyEmail = async (name, email, userID) => {
   try {
     let transporter = nodemailer.createTransport({
@@ -78,6 +79,47 @@ export const forgetPassword = async (req, res) => {
   const alreadyHasToken = await passwordResetToken.findOne({ owner: user._id });
   if (alreadyHasToken) return res.status(400).json({ message: "Chỉ sau một giờ, bạn có thể yêu cầu một mã thông báo khác!" });
 
+  
+  const token = await generateRandomByte();
+  const newPasswordResetToken = await passwordResetToken({
+      owner: user._id,
+      token,
+  });
+  await newPasswordResetToken.save();
+  try {
+    const resetPasswordUrl = `${process.env.BASE_URL}user/reset-password?token=${token}&id=${user._id}`;
+
+    let transporter = nodemailer.createTransport({
+      host: process.env.HOST,
+      port: process.env.EMAIL_PORT,
+      secure: process.env.SECURE,
+      auth: {
+        user: process.env.USER,
+        pass: process.env.PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: `The Man Shop ${process.env.USER}`,
+      to: email,
+      subject: "Đặt lại mật khẩu",
+      html: `<p>Bấm vào đây để đặt lại mật khẩu</p>
+             <a href='${resetPasswordUrl}'>Đổi mật khẩu</a>`,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Email not sent !");
+        console.log(error);
+      } else {
+        console.log("Email has been sent:- ", info.response);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+
+  res.json({ message: "Link sent to your email!" });
 };
 
 export const signin = async (req, res) => {
