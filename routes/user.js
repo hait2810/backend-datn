@@ -11,6 +11,7 @@ import {
 } from "../controllers/user";
 const router = express.Router();
 import { isAdmin, isAuth, requireSignin } from "../middlewares/checkAuth";
+import { isValidPassResetToken } from "../middlewares/user";
 
 router.post("/users", listUser);
 router.put("/user/:id", requireSignin, isAuth, isAdmin, updateUsers);
@@ -19,5 +20,8 @@ router.post("/signup", signup);
 router.post("/signin", signin);
 router.get("/verify/:id", verifyEmail);
 router.post("/forget-password", forgetPassword);
+router.post("/verify-pass-reset-token", isValidPassResetToken, (req, res) => {
+  res.json({valid: true});
+});
 
 export default router;
