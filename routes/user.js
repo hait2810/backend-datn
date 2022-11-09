@@ -7,7 +7,9 @@ import {
   signup,
   updateUsers,
   verifyEmail,
-  forgetPassword
+  forgetPassword,
+  sendResetPasswordTokenStatus,
+  resetPassword,
 } from "../controllers/user";
 const router = express.Router();
 import { isAdmin, isAuth, requireSignin } from "../middlewares/checkAuth";
@@ -20,8 +22,15 @@ router.post("/signup", signup);
 router.post("/signin", signin);
 router.get("/verify/:id", verifyEmail);
 router.post("/forget-password", forgetPassword);
-router.post("/verify-pass-reset-token", isValidPassResetToken, (req, res) => {
-  res.json({valid: true});
-});
+router.post(
+  "/verify-pass-reset-token",
+  isValidPassResetToken,
+  sendResetPasswordTokenStatus
+);
+router.post(
+  "/reset-password",
+  isValidPassResetToken,
+  resetPassword
+);
 
 export default router;
