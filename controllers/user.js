@@ -1,7 +1,8 @@
 import User from "../models/user";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
-
+import passwordResetToken from '../models/passwordResetToken';
+import { generateRandomByte } from '../utils/helper';
 const sendVerifyEmail = async (name, email, userID) => {
   try {
     let transporter = nodemailer.createTransport({
@@ -68,6 +69,107 @@ export const signup = async (req, res) => {
   }
 };
 
+export const forgetPassword = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) return res.status(400).json({ message: "Email không tồn tại" });
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).json({ message: "User không tồn tại" });
+
+  const alreadyHasToken = await passwordResetToken.findOne({ owner: user._id });
+  if (alreadyHasToken) return res.status(400).json({ message: "Chỉ sau một giờ, bạn có thể yêu cầu một mã thông báo khác!" });
+
+  
+  const token = await generateRandomByte();
+  const newPasswordResetToken = await passwordResetToken({
+      owner: user._id,
+      token,
+  });
+  await newPasswordResetToken.save();
+  try {
+    const resetPasswordUrl = `${process.env.BASE_URL}user/reset-password?token=${token}&id=${user._id}`;
+
+    let transporter = nodemailer.createTransport({
+      host: process.env.HOST,
+      port: process.env.EMAIL_PORT,
+      secure: process.env.SECURE,
+      auth: {
+        user: process.env.USER,
+        pass: process.env.PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: `The Man Shop ${process.env.USER}`,
+      to: email,
+      subject: "Đặt lại mật khẩu",
+      html: `<p>Bấm vào đây để đặt lại mật khẩu</p>
+             <a href='${resetPasswordUrl}'>Đổi mật khẩu</a>`,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Email not sent !");
+        console.log(error);
+      } else {
+        console.log("Email has been sent:- ", info.response);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+
+  res.json({ message: "Link sent to your email!" });
+};
+
+export const sendResetPasswordTokenStatus = (req, res) => {
+  res.json({valid: true});
+}
+
+export const resetPassword = async (req, res) => {
+  const { newPassword, userId } = req.body;
+  const user = await User.findById(userId);
+
+  const matched = await user.comparePassword(newPassword);
+  if (matched) return res.status(400).json({ message: "Mật khẩu mới phải khác mật khẩu cũ!" });
+
+  user.password = newPassword;
+  await user.save();
+  await passwordResetToken.findByIdAndDelete(req.resetToken._id)
+  try {
+    let transporter = nodemailer.createTransport({
+      host: process.env.HOST,
+      port: process.env.EMAIL_PORT,
+      secure: process.env.SECURE,
+      auth: {
+        user: process.env.USER,
+        pass: process.env.PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: `The Man Shop ${process.env.USER}`,
+      to: user.email,
+      subject: "Đặt lại mật khẩu thành công",
+      html: `<h1>Đặt lại mật khẩu thành công</h1>
+             <p>Từ bây giờ bạn cần sử dụng mật khẩu mới</p>`,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Email not sent !");
+        console.log(error);
+      } else {
+        console.log("Email has been sent:- ", info.response);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+
+  res.json({ message: "Password reset successfully, now you can new password!" });
+}
+
 export const signin = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -75,9 +177,9 @@ export const signin = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "Email không tồn tại !" });
     }
-    if (!user.authenticate(password)) {
-      return res.status(400).json({ message: "Sai password !" });
-    }
+    const matched = await user.comparePassword(password);
+    if (!matched) return res.status(400).json({ message: "Sai mật khẩu !" });
+    
     if (user.verified === false) {
       return res.status(400).json({
         message: "Vui lòng kiểm tra email xác thực tài khoản !",
