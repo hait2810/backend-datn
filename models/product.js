@@ -23,6 +23,9 @@ const ProductSchema = new Schema(
     weight: {
       type: Number,
     },
+    listed_price: {
+      type: Number,
+    },
     desc: {
       type: String,
       require: true,
