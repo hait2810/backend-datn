@@ -1,5 +1,6 @@
 import Contact from "../models/contact";
 import nodemailer from "nodemailer";
+
 export const createContact = async (req, res) => {
   try {
     await new Contact(req.body).save();
@@ -33,4 +34,19 @@ export const createContact = async (req, res) => {
     });
   }
   res.json({ message: "Gửi email thành công" });
+};
+
+export const updateContact = async (req, res) => {
+  try {
+    const newContact = await Contact.findOneAndUpdate(
+      { _id: req.params.id },
+      req.body,
+      { new: true }
+    ).exec();
+    res.json(newContact);
+  } catch (error) {
+    res.status(400).json({
+      message: "Sửa không thành công !",
+    });
+  }
 };

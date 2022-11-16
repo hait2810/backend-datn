@@ -1,10 +1,10 @@
 import express from "express";
-import { createContact } from "../controllers/contact";
+import { createContact, updateContact } from "../controllers/contact";
 
 const router = express.Router();
 
 router.post("/contact", createContact);
-router.put("/contact/:id", (req, res) => {});
+router.put("/contact/:id", updateContact);
 router.get("/contacts", (req, res) => {});
 router.get("/contact/:id", (req, res) => {});
 router.delete("/contact/:id", (req, res) => {});
