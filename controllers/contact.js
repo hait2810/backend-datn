@@ -75,3 +75,16 @@ export const readContact = async (req, res) => {
     });
   }
 };
+
+export const removeContact = async (req, res) => {
+  try {
+    const contact = await Contact.findOneAndDelete({
+      _id: req.params.id,
+    }).exec();
+    res.json(contact);
+  } catch (error) {
+    res.status(400).json({
+      message: "Không xoá được",
+    });
+  }
+};
