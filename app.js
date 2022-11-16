@@ -14,7 +14,6 @@ import routerSlider from "./routes/slider";
 import routerOrders from "./routes/orders";
 import routerCarts from "./routes/carts";
 import routerComments from "./routes/comment";
-
 const url =
   "mongodb+srv://datn_433:tg7aERk5yF9Jes9V@atlascluster.nyvzdzm.mongodb.net/?retryWrites=true&w=majority";
 async function connect() {
