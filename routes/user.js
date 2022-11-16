@@ -10,6 +10,7 @@ import {
   forgetPassword,
   sendResetPasswordTokenStatus,
   resetPassword,
+  updateProfile,
 } from "../controllers/user";
 const router = express.Router();
 import { isAdmin, isAuth, requireSignin } from "../middlewares/checkAuth";
@@ -20,6 +21,7 @@ router.put("/user/:id", requireSignin, isAuth, isAdmin, updateUsers);
 router.get("/user/:id", readUser);
 router.post("/signup", signup);
 router.post("/signin", signin);
+router.put("/profile", requireSignin, isAuth, updateProfile);
 router.get("/verify/:id", verifyEmail);
 router.post("/forget-password", forgetPassword);
 router.post(
@@ -27,10 +29,6 @@ router.post(
   isValidPassResetToken,
   sendResetPasswordTokenStatus
 );
-router.post(
-  "/reset-password",
-  isValidPassResetToken,
-  resetPassword
-);
+router.post("/reset-password", isValidPassResetToken, resetPassword);
 
 export default router;
