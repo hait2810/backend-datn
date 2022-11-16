@@ -14,6 +14,7 @@ import routerSlider from "./routes/slider";
 import routerOrders from "./routes/orders";
 import routerCarts from "./routes/carts";
 import routerComments from "./routes/comment";
+import routerContact from "./routes/contact";
 const url =
   "mongodb+srv://datn_433:tg7aERk5yF9Jes9V@atlascluster.nyvzdzm.mongodb.net/?retryWrites=true&w=majority";
 async function connect() {
@@ -41,6 +42,7 @@ app.use(routerColor);
 app.use(routerOrders);
 app.use(routerCarts);
 app.use(routerComments);
+app.use(routerContact);
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log("Đang chạy cổng", PORT);
