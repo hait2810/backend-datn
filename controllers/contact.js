@@ -64,3 +64,14 @@ export const listContact = async (req, res) => {
     });
   }
 };
+
+export const readContact = async (req, res) => {
+  try {
+    const contact = await Contact.findOne({ _id: req.params.id }).exec();
+    res.json(contact);
+  } catch (error) {
+    res.status(400).json({
+      message: "Không hiển thị ",
+    });
+  }
+};
