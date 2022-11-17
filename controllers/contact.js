@@ -53,15 +53,14 @@ export const updateContact = async (req, res) => {
 
 export const listContact = async (req, res) => {
   try {
-    const body = req.body;
-    const skip = body.limit * (body.page - 1);
-    const count = await Contact.find({}).count();
-    const contact = await Contact.find({}).skip(skip).limit(body.limit);
-    res.json({ contact, count });
+    const contact = await Contact.find()
+      .sort({
+        createdAt: "desc",
+      })
+      .exec();
+    res.json(contact);
   } catch (error) {
-    res.status(400).json({
-      message: "Không hiển thị ",
-    });
+    res.status(400).json({ message: error });
   }
 };
 
