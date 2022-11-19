@@ -30,9 +30,6 @@ const ProductSchema = new Schema(
       type: String,
       require: true,
     },
-    sell_number: {
-      type: String,
-    },
 
     type: [
       {

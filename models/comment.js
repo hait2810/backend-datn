@@ -23,6 +23,7 @@ commentSchema.pre(/^find/, function (next) {
     select: {
       _id: 1,
       fullname: 1,
+      img: 1,
     },
   });
 

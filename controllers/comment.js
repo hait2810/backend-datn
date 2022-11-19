@@ -63,9 +63,8 @@ export const getByProduct = async (req, res) => {
   try {
     const { id } = req.params;
     // const product = await Product.findOne({ _id }).exec();
-    const comments = await Comment.find({ productId: id })
-      .sort("-createdAt")
-      .exec();
+    const comments = await Comment.find({ productId: id }).sort("-createdAt");
+    // .exec();
     console.log(comments);
 
     res.json(comments);
