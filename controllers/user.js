@@ -281,9 +281,9 @@ export const readUser = async (req, res) => {
     });
   }
 };
+
 export const updateProfile = async (req, res) => {
   try {
-    console.log(req.profile);
     const user = await User.findOneAndUpdate(
       { _id: req.profile._id },
       { fullname: req.body.fullname, phone: req.body.phone, img: req.body.img },
