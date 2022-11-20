@@ -30,7 +30,10 @@ const ProductSchema = new Schema(
       type: String,
       require: true,
     },
-
+    sold: {
+      type: Number,
+      default: 0,
+    },
     type: [
       {
         color: {

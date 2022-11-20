@@ -17,18 +17,47 @@ export const thongke = async (req, res) => {
     const body = req.body;
     const count = await Product.find({}).count();
     const skip = body.limit * (body.page - 1);
-    const products = await Product.aggregate({
-      $addFields: {
-        total: { $multiply: ["$price", "$quantity"] },
-        quantity: {
-          $sum: "$type.quantity",
+    const all = await Product.aggregate([
+      {
+        $addFields: {
+          quantity: {
+            $sum: "$type.quantity",
+          },
         },
       },
-    })
-      .skip(skip)
-      .limit(body.limit)
-      .populate("categoryId");
-    res.json({ products, count });
+      {
+        $addFields: {
+          total_import_price: { $multiply: ["$listed_price", "$quantity"] },
+          total_export_price: { $multiply: ["$price", "$sold"] },
+          stock: { $subtract: ["$quantity", "$sold"] },
+        },
+      },
+      {
+        $addFields: {
+          turnover: {
+            $subtract: ["$total_export_price", "$total_import_price"],
+          },
+        },
+      },
+    ]);
+    // .skip(skip)
+    // .limit(body.limit);
+
+    const total = {
+      quantity: 0,
+      sold: 0,
+      total_import_price: 0,
+      total_export_price: 0,
+    };
+    all.forEach((product) => {
+      total.quantity += +product.quantity;
+      total.sold += Number(product.sold || 0);
+      total.total_import_price += +product.total_import_price;
+      total.total_export_price += +product.total_export_price;
+    });
+    total.doanhthu = total.total_export_price - total.total_import_price;
+    const list = all.slice(skip, skip + body.limit);
+    res.json({ list, total });
   } catch (error) {
     console.log(error);
     res.status(400).json({
@@ -112,6 +141,7 @@ export const updateQuantityProduct = async (req, res) => {
       }
       return type;
     });
+    product.sold += quantity;
     product.type = newType;
     const resp = await Product.findByIdAndUpdate(_id, product, {
       returnDocument: "after",
