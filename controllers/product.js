@@ -78,7 +78,11 @@ export const updateQuantityProduct = async (req, res) => {
     const newType = product.type.map((type) => {
       if (type.color === color && type.size === size) {
         if (quantity > type.quantity) {
-          throw "Error quantity";
+          throw {
+            code: 503, 
+            message: "Sản phẩm " + product.name + ", size: " + size + ", màu: " + color + " chỉ còn " + type.quantity + " sản phẩm.",
+            color
+          }
         }
         return {
           ...type,
@@ -94,7 +98,7 @@ export const updateQuantityProduct = async (req, res) => {
     
     res.json(resp);
   } catch (error) {
-    res.status(400).json({ message: error });
+    res.json(error);
   }
 };
 
