@@ -1,8 +1,8 @@
 import User from "../models/user";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
-import passwordResetToken from '../models/passwordResetToken';
-import { generateRandomByte } from '../utils/helper';
+import passwordResetToken from "../models/passwordResetToken";
+import { generateRandomByte } from "../utils/helper";
 const sendVerifyEmail = async (name, email, userID) => {
   try {
     let transporter = nodemailer.createTransport({
@@ -77,13 +77,15 @@ export const forgetPassword = async (req, res) => {
   if (!user) return res.status(400).json({ message: "User không tồn tại" });
 
   const alreadyHasToken = await passwordResetToken.findOne({ owner: user._id });
-  if (alreadyHasToken) return res.status(400).json({ message: "Chỉ sau một giờ, bạn có thể yêu cầu một mã thông báo khác!" });
+  if (alreadyHasToken)
+    return res.status(400).json({
+      message: "Chỉ sau một giờ, bạn có thể yêu cầu một mã thông báo khác!",
+    });
 
-  
   const token = await generateRandomByte();
   const newPasswordResetToken = await passwordResetToken({
-      owner: user._id,
-      token,
+    owner: user._id,
+    token,
   });
   await newPasswordResetToken.save();
   try {
@@ -118,24 +120,26 @@ export const forgetPassword = async (req, res) => {
     console.log(error);
   }
 
-
   res.json({ message: "Link sent to your email!" });
 };
 
 export const sendResetPasswordTokenStatus = (req, res) => {
-  res.json({valid: true});
-}
+  res.json({ valid: true });
+};
 
 export const resetPassword = async (req, res) => {
   const { newPassword, userId } = req.body;
   const user = await User.findById(userId);
 
   const matched = await user.comparePassword(newPassword);
-  if (matched) return res.status(400).json({ message: "Mật khẩu mới phải khác mật khẩu cũ!" });
+  if (matched)
+    return res
+      .status(400)
+      .json({ message: "Mật khẩu mới phải khác mật khẩu cũ!" });
 
   user.password = newPassword;
   await user.save();
-  await passwordResetToken.findByIdAndDelete(req.resetToken._id)
+  await passwordResetToken.findByIdAndDelete(req.resetToken._id);
   try {
     let transporter = nodemailer.createTransport({
       host: process.env.HOST,
@@ -166,9 +170,10 @@ export const resetPassword = async (req, res) => {
     console.log(error);
   }
 
-
-  res.json({ message: "Password reset successfully, now you can new password!" });
-}
+  res.json({
+    message: "Password reset successfully, now you can new password!",
+  });
+};
 
 export const signin = async (req, res) => {
   const { email, password } = req.body;
@@ -179,7 +184,7 @@ export const signin = async (req, res) => {
     }
     const matched = await user.comparePassword(password);
     if (!matched) return res.status(400).json({ message: "Sai mật khẩu !" });
-    
+
     if (user.verified === false) {
       return res.status(400).json({
         message: "Vui lòng kiểm tra email xác thực tài khoản !",
@@ -273,6 +278,29 @@ export const readUser = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: "Không hiển thị người dùng ",
+    });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const user = await User.findOneAndUpdate(
+      { _id: req.profile._id },
+      { fullname: req.body.fullname, phone: req.body.phone, img: req.body.img },
+      { new: true }
+    ).exec();
+    res.json({
+      id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      phone: user.phone,
+      img: user.img,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "Không edit được",
     });
   }
 };
