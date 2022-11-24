@@ -248,7 +248,7 @@ export const updateUsers = async (req, res) => {
         status: req.body.status,
         fullname: req.body.fullname,
         img: req.body.img,
-        phone: req.body.img,
+        phone: req.body.phone,
       },
       { new: true }
     ).exec();
