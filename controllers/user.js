@@ -191,7 +191,7 @@ export const signin = async (req, res) => {
         verified: false,
       });
     }
-    const token = jwt.sign({ email }, "Theman", { expiresIn: "3h" });
+    const token = jwt.sign({ email }, "Theman", { expiresIn: "999999h" });
     res.json({
       token,
       users: {
