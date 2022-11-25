@@ -244,7 +244,12 @@ export const updateUsers = async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
       { _id: req.params.id },
-      { status: req.body.status, fullname: req.body.fullname },
+      {
+        status: req.body.status,
+        fullname: req.body.fullname,
+        img: req.body.img,
+        phone: req.body.phone,
+      },
       { new: true }
     ).exec();
     res.json({
@@ -271,6 +276,8 @@ export const readUser = async (req, res) => {
       id: user._id,
       fullname: user.fullname,
       email: user.email,
+      img: user.img,
+      phone: user.phone,
       role: user.role,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
