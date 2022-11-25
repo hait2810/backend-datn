@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  countNumberProduct,
   createProduct,
   listProduct,
   readProduct,
@@ -17,6 +18,7 @@ router.post("/product", requireSignin, isAuth, isAdmin, createProduct);
 router.post("/thongke", requireSignin, isAuth, isAdmin, thongke);
 router.post("/products", listProduct);
 router.get("/product/:id", readProduct);
+router.post("/countproduct", countNumberProduct)
 router.delete("/product/:id", requireSignin, isAuth, isAdmin, removeProduct);
 router.put("/product/:id", requireSignin, isAuth, isAdmin, updateProduct);
 router.put("/updatequantity/", updateQuantityProduct);

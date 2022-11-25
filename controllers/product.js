@@ -59,7 +59,6 @@ export const thongke = async (req, res) => {
     const list = all.slice(skip, skip + body.limit);
     res.json({ list, total });
   } catch (error) {
-    console.log(error);
     res.status(400).json({
       message: "Không hiển thị sản phẩm",
     });
@@ -77,7 +76,6 @@ export const listProduct = async (req, res) => {
       .populate("categoryId");
     res.json({ products, count });
   } catch (error) {
-    console.log(error);
     res.status(400).json({
       message: "Không hiển thị sản phẩm",
     });
@@ -183,6 +181,33 @@ export const updateType = async (req, res) => {
       }
     ).exec();
     res.json(update);
+  } catch (error) {
+    res.json(error);
+  }
+};
+
+export const countNumberProduct = async (req, res) => {
+  try {
+    const { _id, color, size, quantity } = req.body;
+
+    const product = await Product.findById(_id).exec();
+
+    const newType = product.type.map((type) => {
+      if (type.color === color && type.size === size) {
+        if (quantity > type.quantity) {
+          throw {
+            code: 503, 
+            message: "Sản phẩm " + product.name + ", size: " + size + ", màu: " + color + " chỉ còn " + type.quantity + " sản phẩm.",
+            color
+          }
+        }
+      }
+      return type;
+    });
+    res.json({
+      code: 200, 
+      message: "Success"
+    });
   } catch (error) {
     res.json(error);
   }
