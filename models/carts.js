@@ -8,6 +8,10 @@ const cartSchema = new mongoose.Schema({
     userID: {
         type: ObjectId,
         ref: 'User'
+    },
+    tm_codeorder: {
+        type: String,
+        require: true
     }
 })
 

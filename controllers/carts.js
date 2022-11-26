@@ -3,8 +3,16 @@ import User from "../models/user";
 
 export const addCart = async (req,res) => {
           try {
+            const {tm_codeorder} = req.body
+            const exitsCart = await Carts.findOne({tm_codeorder})
+            if(exitsCart) {
+              return res.json({code: 409, message: "Đã tồn tại mã đơn hàng"})
+            }
             const carts = await Carts(req.body).save()
-            res.json(carts)
+            res.json({
+              code: 200, 
+              carts
+            })
           } catch (error) {
             res.status(400).json(error)
           }

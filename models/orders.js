@@ -41,9 +41,21 @@ const ordersSchema = new mongoose.Schema(
     order_code: {
       type: String
     },
+    tm_codeorder: {
+      type: String,
+      require: true
+    },
     totalprice: {
       type: Number,
       require: true,
+    },
+    payment_methods: {
+      type: Number,
+      require: true
+    },
+    payment_status: {
+      type: Number,
+      default: 0
     },
     status: {
       type: Number,
