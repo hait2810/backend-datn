@@ -67,8 +67,29 @@ export const thongke = async (req, res) => {
 
 export const search = async (req, res) => {
   try {
-    const conditions = { name: { $regex: req.query.key, $options: "i" } };
+    const conditions = { name: { $regex: req.query.name, $options: "i" } };
+    console.log(conditions);
     const products = await Product.find(conditions);
+    res.json(products);
+  } catch (error) {
+    res.status(400).json({
+      error: "Không timf được sản phẩm",
+    });
+  }
+};
+
+export const filter_product = async (req, res) => {
+  try {
+    const products = await Product.find({
+      name: {
+        $regex: req.body.name,
+        $options: "i",
+      },
+      price: {
+        $gt: req.body.prices.gt,
+        $lt: req.body.prices.lt,
+      },
+    });
     res.json(products);
   } catch (error) {
     res.status(400).json({
@@ -217,17 +238,26 @@ export const countNumberProduct = async (req, res) => {
       if (type.color === color && type.size === size) {
         if (quantity > type.quantity) {
           throw {
-            code: 503, 
-            message: "Sản phẩm " + product.name + ", size: " + size + ", màu: " + color + " chỉ còn " + type.quantity + " sản phẩm.",
-            color
-          }
+            code: 503,
+            message:
+              "Sản phẩm " +
+              product.name +
+              ", size: " +
+              size +
+              ", màu: " +
+              color +
+              " chỉ còn " +
+              type.quantity +
+              " sản phẩm.",
+            color,
+          };
         }
       }
       return type;
     });
     res.json({
-      code: 200, 
-      message: "Success"
+      code: 200,
+      message: "Success",
     });
   } catch (error) {
     res.json(error);
