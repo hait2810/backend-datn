@@ -80,6 +80,7 @@ export const search = async (req, res) => {
 
 export const filter_product = async (req, res) => {
   try {
+    const count = await Product.find({}).count();
     const products = await Product.find({
       name: {
         $regex: req.body.name,
@@ -90,7 +91,7 @@ export const filter_product = async (req, res) => {
         $lt: req.body.prices.lt,
       },
     });
-    res.json(products);
+    res.json({ products, count });
   } catch (error) {
     res.status(400).json({
       error: "Không timf được sản phẩm",
