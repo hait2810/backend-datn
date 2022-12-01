@@ -311,3 +311,24 @@ export const updateProfile = async (req, res) => {
     });
   }
 };
+
+export const filter_user = async (req, res) => {
+  try {
+    const count = await Posts.find({}).count();
+    const posts = await Posts.find({
+      name: {
+        $regex: req.body.name,
+        $options: "i",
+      },
+      email: {
+        $regex: req.body.email,
+        $options: "i",
+      },
+    });
+    res.json({ posts, count });
+  } catch (error) {
+    res.status(400).json({
+      error: "Không timf được sản phẩm",
+    });
+  }
+};

@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createPosts,
+  filter_post,
   listPosts,
   readPosts,
   removePosts,
@@ -13,6 +14,7 @@ const router = express.Router();
 router.post("/post", requireSignin, isAuth, isAdmin, createPosts);
 router.post("/posts", listPosts);
 router.get("/post/:id", readPosts);
+router.post("/post/filter", filter_post);
 router.delete("/post/:id", requireSignin, isAuth, isAdmin, removePosts);
 router.put("/post/:id", requireSignin, isAuth, isAdmin, updatePosts);
 
