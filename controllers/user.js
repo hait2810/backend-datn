@@ -314,10 +314,10 @@ export const updateProfile = async (req, res) => {
 
 export const filter_user = async (req, res) => {
   try {
-    const count = await Posts.find({}).count();
-    const posts = await Posts.find({
-      name: {
-        $regex: req.body.name,
+    const count = await User.find({}).count();
+    const users = await User.find({
+      fullname: {
+        $regex: req.body.fullname,
         $options: "i",
       },
       email: {
@@ -325,7 +325,7 @@ export const filter_user = async (req, res) => {
         $options: "i",
       },
     });
-    res.json({ posts, count });
+    res.json({ users, count });
   } catch (error) {
     res.status(400).json({
       error: "Không timf được sản phẩm",
