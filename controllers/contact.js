@@ -63,6 +63,22 @@ export const listContact = async (req, res) => {
     res.status(400).json({ message: error });
   }
 };
+export const filter_contact = async (req, res) => {
+  try {
+    const count = await Contact.find({}).count();
+    const contact = await Contact.find({
+      fullName: {
+        $regex: req.body.fullName,
+        $options: "i",
+      },
+    });
+    res.json({ contact, count });
+  } catch (error) {
+    res.status(400).json({
+      error: "Không timf được sản phẩm",
+    });
+  }
+};
 
 export const readContact = async (req, res) => {
   try {
