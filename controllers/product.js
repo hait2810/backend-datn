@@ -1,5 +1,6 @@
 import { ObjectId } from "mongoose";
 import Product from "../models/product";
+import Order from "../models/orders";
 
 export const createProduct = async (req, res) => {
   try {
@@ -12,6 +13,228 @@ export const createProduct = async (req, res) => {
   }
 };
 
+export const thongKeByDate = async (req, res) => {
+  try {
+    const soldByDate = await Order.aggregate([
+      {
+        $addFields: {
+          day: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+          },
+
+          // month: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+          // year: { $dateToString: { format: "%Y", date: "$createdAt" } },
+        },
+      },
+      {
+        $match: {
+          day: req.body.day,
+        },
+      },
+    ]);
+    const thongKe = await Product.aggregate([
+      {
+        $addFields: {
+          day: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+          },
+        },
+      },
+      {
+        $match: {
+          day: req.body.day,
+        },
+      },
+      {
+        $addFields: {
+          quantity: {
+            $sum: "$type.quantity",
+          },
+        },
+      },
+      {
+        $addFields: {
+          soldInDay: soldByDate.length,
+        },
+      },
+      {
+        $addFields: {
+          total_import_price: { $multiply: ["$listed_price", "$quantity"] },
+          total_export_price: { $multiply: ["$price", "$soldInDay"] },
+        },
+      },
+    ]);
+    const total = {
+      quantity: 0,
+      total_import_price: 0,
+      total_export_price: 0,
+      turnover: 0,
+    };
+    thongKe.forEach((product) => {
+      total.quantity += +product.quantity;
+      total.total_import_price += +product.total_import_price;
+      total.total_export_price += +product.total_export_price;
+      total.turnover = total.total_import_price - total.total_export_price;
+    });
+    res.json({
+      ...total,
+      soldInDay: soldByDate.length,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      message: "Khong tinh duoc",
+    });
+  }
+};
+export const thongKeByMonth = async (req, res) => {
+  try {
+    const soldByDate = await Order.aggregate([
+      {
+        $addFields: {
+          day: {
+            $dateToString: { format: "%Y-%m", date: "$createdAt" },
+          },
+
+          // month: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+          // year: { $dateToString: { format: "%Y", date: "$createdAt" } },
+        },
+      },
+      {
+        $match: {
+          day: req.body.day,
+        },
+      },
+    ]);
+    const thongKe = await Product.aggregate([
+      {
+        $addFields: {
+          day: {
+            $dateToString: { format: "%Y-%m", date: "$createdAt" },
+          },
+        },
+      },
+      {
+        $match: {
+          day: req.body.day,
+        },
+      },
+      {
+        $addFields: {
+          quantity: {
+            $sum: "$type.quantity",
+          },
+        },
+      },
+      {
+        $addFields: {
+          soldInDay: soldByDate.length,
+        },
+      },
+      {
+        $addFields: {
+          total_import_price: { $multiply: ["$listed_price", "$quantity"] },
+          total_export_price: { $multiply: ["$price", "$soldInDay"] },
+        },
+      },
+    ]);
+    const total = {
+      quantity: 0,
+      total_import_price: 0,
+      total_export_price: 0,
+      turnover: 0,
+    };
+    thongKe.forEach((product) => {
+      total.quantity += +product.quantity;
+      total.total_import_price += +product.total_import_price;
+      total.total_export_price += +product.total_export_price;
+      total.turnover = total.total_import_price - total.total_export_price;
+    });
+    res.json({
+      ...total,
+      soldInDay: soldByDate.length,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      message: "Khong tinh duoc",
+    });
+  }
+};
+export const thongKeByYear = async (req, res) => {
+  try {
+    const soldByDate = await Order.aggregate([
+      {
+        $addFields: {
+          day: {
+            $dateToString: { format: "%Y", date: "$createdAt" },
+          },
+
+          // month: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+          // year: { $dateToString: { format: "%Y", date: "$createdAt" } },
+        },
+      },
+      {
+        $match: {
+          day: req.body.day,
+        },
+      },
+    ]);
+    const thongKe = await Product.aggregate([
+      {
+        $addFields: {
+          day: {
+            $dateToString: { format: "%Y", date: "$createdAt" },
+          },
+        },
+      },
+      {
+        $match: {
+          day: req.body.day,
+        },
+      },
+      {
+        $addFields: {
+          quantity: {
+            $sum: "$type.quantity",
+          },
+        },
+      },
+      {
+        $addFields: {
+          soldInDay: soldByDate.length,
+        },
+      },
+      {
+        $addFields: {
+          total_import_price: { $multiply: ["$listed_price", "$quantity"] },
+          total_export_price: { $multiply: ["$price", "$soldInDay"] },
+        },
+      },
+    ]);
+    const total = {
+      quantity: 0,
+      total_import_price: 0,
+      total_export_price: 0,
+      turnover: 0,
+    };
+    thongKe.forEach((product) => {
+      total.quantity += +product.quantity;
+      total.total_import_price += +product.total_import_price;
+      total.total_export_price += +product.total_export_price;
+      total.turnover = total.total_import_price - total.total_export_price;
+    });
+    res.json({
+      ...total,
+      soldInDay: soldByDate.length,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      message: "Khong tinh duoc",
+    });
+  }
+};
 export const thongke = async (req, res) => {
   try {
     const body = req.body;
@@ -39,6 +262,7 @@ export const thongke = async (req, res) => {
           },
         },
       },
+      { $sort: { sold: -1 } },
     ]);
     // .skip(skip)
     // .limit(body.limit);
@@ -56,13 +280,53 @@ export const thongke = async (req, res) => {
       total.total_export_price += +product.total_export_price;
     });
     total.doanhthu = total.total_export_price - total.total_import_price;
-    const list = all.slice(skip, skip + body.limit);
+    const list = all.slice(0, 5);
     res.json({ list, total });
   } catch (error) {
     res.status(400).json({
       message: "Không hiển thị sản phẩm",
     });
   }
+};
+export const thongke_tong = async (req, res) => {
+  const all = await Product.aggregate([
+    {
+      $addFields: {
+        quantity: {
+          $sum: "$type.quantity",
+        },
+      },
+    },
+    {
+      $addFields: {
+        total_import_price: { $multiply: ["$listed_price", "$quantity"] },
+        total_export_price: { $multiply: ["$price", "$sold"] },
+        stock: { $subtract: ["$quantity", "$sold"] },
+      },
+    },
+    {
+      $addFields: {
+        turnover: {
+          $subtract: ["$total_export_price", "$total_import_price"],
+        },
+      },
+    },
+    { $sort: { sold: -1 } },
+  ]);
+  const total = {
+    quantity: 0,
+    sold: 0,
+    total_import_price: 0,
+    total_export_price: 0,
+  };
+  all.forEach((product) => {
+    total.quantity += +product.quantity;
+    total.sold += Number(product.sold || 0);
+    total.total_import_price += +product.total_import_price;
+    total.total_export_price += +product.total_export_price;
+  });
+  total.doanhthu = total.total_export_price - total.total_import_price;
+  res.json(total);
 };
 
 export const search = async (req, res) => {

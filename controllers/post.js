@@ -41,13 +41,13 @@ export const readPosts = async (req, res) => {
 export const filter_post = async (req, res) => {
   try {
     const count = await Posts.find({}).count();
-    const posts = await Posts.find({
+    const Post = await Posts.find({
       title: {
         $regex: req.body.title,
         $options: "i",
       },
     });
-    res.json({ posts, count });
+    res.json({ Post, count });
   } catch (error) {
     res.status(400).json({
       error: "Không timf được sản phẩm",

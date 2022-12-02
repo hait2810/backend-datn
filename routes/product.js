@@ -8,6 +8,10 @@ import {
   removeProduct,
   search,
   thongke,
+  thongKeByDate,
+  thongKeByMonth,
+  thongKeByYear,
+  thongke_tong,
   updateProduct,
   updateQuantityProduct,
   updateType,
@@ -18,6 +22,10 @@ const router = express.Router();
 
 router.post("/product", requireSignin, isAuth, isAdmin, createProduct);
 router.post("/thongke", thongke);
+router.post("/thongke_tong", thongke_tong);
+router.post("/products/thongkebyday", thongKeByDate);
+router.post("/products/thongkebymonth", thongKeByMonth);
+router.post("/products/thongkebyyear", thongKeByYear);
 router.post("/products", listProduct);
 router.post("/product/filter", filter_product);
 router.get("/product/search", search);

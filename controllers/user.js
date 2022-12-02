@@ -328,7 +328,7 @@ export const filter_user = async (req, res) => {
     res.json({ users, count });
   } catch (error) {
     res.status(400).json({
-      error: "Không timf được sản phẩm",
+      error: "Không timf được nguoi dung",
     });
   }
 };
