@@ -318,6 +318,7 @@ export const thongke = async (req, res) => {
           total_export_price: { $multiply: ["$sold", "$tiendaban"] },
         },
       },
+      { $sort: { sold: -1 } },
     ]);
     // .skip(skip)
     // .limit(body.limit);
@@ -328,16 +329,23 @@ export const thongke = async (req, res) => {
       total_import_price: 0,
       total_export_price: 0,
     };
-    thongkeorder.forEach((order) => {
+    for (let i = 0; i < thongkeorder.length; i++) {
+      const product = await Product.findOne({
+        _id: thongkeorder[i]._id,
+      });
+      thongkeorder[i].product = product;
+    }
+    thongkeorder.forEach(async (order) => {
       total.total_export_price += +order.total_export_price;
+      total.sold += +order.sold;
     });
     all.forEach((product) => {
       total.quantity += +product.quantity;
       total.total_import_price += +product.total_import_price;
     });
     total.doanhthu = total.total_export_price - total.total_import_price;
-    const list = all.slice(0, 5);
-    res.json({ list, total, thongkeorder });
+    const list = thongkeorder.slice(0, 5);
+    res.json({ list, total });
   } catch (error) {
     res.status(400).json({
       message: "Không hiển thị sản phẩm",
