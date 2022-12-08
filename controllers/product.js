@@ -78,7 +78,7 @@ export const thongke = async (req, res) => {
       },
       {
         $addFields: {
-          total_export_price: { $multiply: ["$sold", "$tiendaban"] },
+          total_export_price: "$tiendaban",
         },
       },
       { $sort: { sold: -1 } },
@@ -107,7 +107,7 @@ export const thongke = async (req, res) => {
         {
           $addFields: {
             total_import_price: { $multiply: ["$listed_price", "$quantity"] },
-            total_export_price: thongkeorder[i].total_export_price,
+            total_export_price: thongkeorder[i].tiendaban,
             stock: { $subtract: ["$quantity", "$sold"] },
           },
         },
@@ -127,14 +127,16 @@ export const thongke = async (req, res) => {
       //   return el._id.toString() === order._id;
       // });
       // order.product = product;
+      if (!order.product) return;
       total.total_export_price += +order.total_export_price;
       total.quantity += +order.product.quantity;
+
       total.sold += +order.sold;
       total.total_import_price += +order.product.total_import_price;
     });
     all.forEach((product) => {});
     total.doanhthu = total.total_export_price - total.total_import_price;
-    const list = thongkeorder.slice(0, 5);
+    const list = thongkeorder.slice(0, 1);
     res.json({ list, total });
   } catch (error) {
     console.log(error);
@@ -146,7 +148,7 @@ export const thongke = async (req, res) => {
 
 export const search = async (req, res) => {
   try {
-    const conditions = { name: { $regex: req.query.name, $options: "i" } };
+    const conditions = { name: { $regex: req.body.name, $options: "i" } };
     console.log(conditions);
     const products = await Product.find(conditions);
     res.json(products);

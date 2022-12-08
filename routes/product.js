@@ -24,7 +24,7 @@ router.post("/product", requireSignin, isAuth, isAdmin, createProduct);
 router.post("/thongke", requireSignin, isAuth, isAdmin, thongke);
 router.post("/products", listProduct);
 router.post("/product/filter", filter_product);
-router.get("/product/search", search);
+router.post("/products/search", search);
 router.get("/product/:id", readProduct);
 router.post("/countproduct", countNumberProduct);
 router.delete("/product/:id", requireSignin, isAuth, isAdmin, removeProduct);
