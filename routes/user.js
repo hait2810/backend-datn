@@ -11,6 +11,7 @@ import {
   sendResetPasswordTokenStatus,
   resetPassword,
   updateProfile,
+  filter_user,
 } from "../controllers/user";
 const router = express.Router();
 import { isAdmin, isAuth, requireSignin } from "../middlewares/checkAuth";
@@ -21,6 +22,7 @@ router.put("/user/:id", requireSignin, isAuth, isAdmin, updateUsers);
 router.get("/user/:id", readUser);
 router.post("/signup", signup);
 router.post("/signin", signin);
+router.post("/user/filter", filter_user);
 router.put("/profile", requireSignin, isAuth, updateProfile);
 router.get("/verify/:id", verifyEmail);
 router.post("/forget-password", forgetPassword);

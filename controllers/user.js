@@ -191,7 +191,11 @@ export const signin = async (req, res) => {
         verified: false,
       });
     }
+<<<<<<< HEAD
     const token = jwt.sign({ email }, "Theman", { expiresIn: "3h" });
+=======
+    const token = jwt.sign({ email }, "Theman", { expiresIn: "1d" });
+>>>>>>> 180c6a77363ce1c21bc93222d142e604d33edf4c
     res.json({
       token,
       users: {
@@ -308,6 +312,27 @@ export const updateProfile = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: "Không edit được",
+    });
+  }
+};
+
+export const filter_user = async (req, res) => {
+  try {
+    const count = await User.find({}).count();
+    const users = await User.find({
+      fullname: {
+        $regex: req.body.fullname,
+        $options: "i",
+      },
+      email: {
+        $regex: req.body.email,
+        $options: "i",
+      },
+    });
+    res.json({ users, count });
+  } catch (error) {
+    res.status(400).json({
+      error: "Không timf được nguoi dung",
     });
   }
 };
