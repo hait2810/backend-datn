@@ -161,7 +161,20 @@ export const search = async (req, res) => {
 
 export const filter_product = async (req, res) => {
   try {
-    const count = await Product.find({}).count();
+    const count = await Product.find({
+      name: {
+        $regex: req.body.name,
+        $options: "i",
+      },
+      price: {
+        $gt: req.body.prices.gt,
+        $lt: req.body.prices.lt,
+      },
+      "type.$.size": {
+        $regex: req.body.size,
+        $options: "i",
+      },
+    }).count();
     const products = await Product.find({
       name: {
         $regex: req.body.name,
@@ -171,9 +184,18 @@ export const filter_product = async (req, res) => {
         $gt: req.body.prices.gt,
         $lt: req.body.prices.lt,
       },
+      type: {
+        $elemMatch: {
+          size: {
+            $regex: req.body.size,
+            $options: "i",
+          },
+        },
+      },
     });
     res.json({ products, count });
   } catch (error) {
+    console.log(error);
     res.status(400).json({
       error: "Không timf được sản phẩm",
     });
