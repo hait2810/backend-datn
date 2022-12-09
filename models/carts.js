@@ -7,11 +7,18 @@ const cartSchema = new mongoose.Schema({
     }, 
     userID: {
         type: ObjectId,
-        ref: 'User'
+        ref: "User"
     },
     tm_codeorder: {
         type: String,
         require: true
+    },
+    voucher: {
+        type: ObjectId,
+        ref: "Discount"
+    },
+    timeadd_v: {
+        type: Number,
     }
 })
 

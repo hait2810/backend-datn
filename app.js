@@ -1,5 +1,10 @@
 require("dotenv").config();
 import express from "express";
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 import mongoose from "mongoose";
 import cors from "cors";
 import routerHome from "./routes/home";
@@ -15,6 +20,8 @@ import routerOrders from "./routes/orders";
 import routerCarts from "./routes/carts";
 import routerComments from "./routes/comment";
 import routerContact from "./routes/contact";
+import routerVNPAY from "./routes/vnpay";
+import routerDiscount from "./routes/discount";
 const url =
   "mongodb+srv://datn_433:tg7aERk5yF9Jes9V@atlascluster.nyvzdzm.mongodb.net/?retryWrites=true&w=majority";
 async function connect() {
@@ -28,6 +35,8 @@ async function connect() {
 connect();
 
 const app = express();
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 app.use(cors());
 app.use(express.json());
 app.use(routerHome);
@@ -43,6 +52,8 @@ app.use(routerOrders);
 app.use(routerCarts);
 app.use(routerComments);
 app.use(routerContact);
+app.use(routerVNPAY)
+app.use(routerDiscount)
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log("Đang chạy cổng", PORT);
