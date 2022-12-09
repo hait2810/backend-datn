@@ -200,6 +200,7 @@ export const signin = async (req, res) => {
         fullname: user.fullname,
         email: user.email,
         role: user.role,
+        img: user.img
       },
     });
   } catch (error) {
