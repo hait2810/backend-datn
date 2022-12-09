@@ -255,6 +255,8 @@ export const updateUsers = async (req, res) => {
     res.json({
       status: user.status,
       id: user._id,
+      phone: user.phone,
+      img: user.img,
       fullname: user.fullname,
       email: user.email,
       role: user.role,
