@@ -57,6 +57,10 @@ const ordersSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    voucher: {
+      type: ObjectId,
+      ref: "Discount"
+    },
     status: {
       type: Number,
       default: 0,
