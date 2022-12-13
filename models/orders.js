@@ -64,7 +64,9 @@ const ordersSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    
+    linkpay: {
+      type: String
+    }
   },
   { timestamps: true }
 );
