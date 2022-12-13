@@ -1,9 +1,11 @@
 import express from 'express'
 import moment from 'moment/moment';
 import config from 'config'
+import VnPay from '../models/vnpay'
+import Order from "../models/orders";
 const router = express.Router()
 
-router.post('/create_payment_url', function (req, res, next) {
+router.post('/create_payment_url', async function (req, res, next) {
     var ipAddr = req.headers['x-forwarded-for'] ||
         req.connection.remoteAddress ||
         req.socket.remoteAddress ||
@@ -52,18 +54,22 @@ router.post('/create_payment_url', function (req, res, next) {
     var signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex"); 
     vnp_Params['vnp_SecureHash'] = signed;
     vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
-
-  //  res.redirect(vnpUrl)
     res.json({
         code: 200, 
         vnpUrl
     })
 });
 
-router.get('/vnpay_return', function (req, res, next) {
+router.get('/vnpay_return', async function (req, res, next) {
     var vnp_Params = req.query;
     var secureHash = vnp_Params['vnp_SecureHash'];
-
+    const exitsTMCODE = await VnPay.findOne({vnp_TxnRef: vnp_Params.vnp_TxnRef}).exec() 
+    const exitsOrder = await Order.findOne({tm_codeorder: vnp_Params.vnp_TxnRef}).exec() 
+    if(exitsTMCODE) {
+                await VnPay.findOneAndUpdate({vnp_TxnRef: vnp_Params.vnp_TxnRef}, vnp_Params)
+    }else {
+                await VnPay(vnp_Params).save()
+    }
     delete vnp_Params['vnp_SecureHash'];
     delete vnp_Params['vnp_SecureHashType'];
 
@@ -72,7 +78,7 @@ router.get('/vnpay_return', function (req, res, next) {
     
     var tmnCode = config.get('vnp_TmnCode');
     var secretKey = config.get('vnp_HashSecret');
-
+    var url2 = config.get('vnp_ReturnUrl2');   
     var querystring = require('qs');
     var signData = querystring.stringify(vnp_Params, { encode: false });
     var crypto = require("crypto");     
@@ -80,7 +86,7 @@ router.get('/vnpay_return', function (req, res, next) {
     var signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");     
     if(secureHash === signed){
         //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
-            const a = {...vnp_Params, signed}
+            
             const result = {
                 code: "",
                 message: ""
@@ -88,6 +94,7 @@ router.get('/vnpay_return', function (req, res, next) {
             if(vnp_Params['vnp_ResponseCode'] == "00") {
                 result.code = vnp_Params['vnp_ResponseCode']
                 result.message = "Giao dịch thành công"
+                await Order.findOneAndUpdate({tm_codeorder: vnp_Params.vnp_TxnRef}, {payment_status:1}).exec()
             }else if(vnp_Params['vnp_ResponseCode'] == "07") {
                 result.code = vnp_Params['vnp_ResponseCode']
                 result.message = "Trừ tiền thành công. Giao dịch bị nghi ngờ (liên quan tới lừa đảo, giao dịch bất thường)."
@@ -136,10 +143,13 @@ router.get('/vnpay_return', function (req, res, next) {
                 result.code = vnp_Params['vnp_ResponseCode']
                 result.message = "Các lỗi khác (lỗi còn lại, không có trong danh sách mã lỗi đã liệt kê)"
             }
-            console.log("res",a);
-            res.json(result)
+            
+            res.redirect(url2)
+          //  res.json(result)
     } else{
-        res.json({code: 400, message: "Sai thông tin!"})
+
+        res.redirect(url2)
+       // res.json({code: 400, message: "Sai thông tin!"})
     }
 });
 

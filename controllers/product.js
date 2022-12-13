@@ -210,7 +210,7 @@ export const listProduct = async (req, res) => {
     const products = await Product.find({})
       .skip(skip)
       .limit(body.limit)
-      .populate("categoryId");
+      .populate("categoryId").sort({createdAt: -1});
     res.json({ products, count });
   } catch (error) {
     res.status(400).json({
