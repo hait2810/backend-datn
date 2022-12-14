@@ -11,7 +11,6 @@ export const isAuth = async (req, res, next) => {
   try {
     const { email } = req.auth;
     const user = await User.findOne({ email }).exec();
-
     if (!user) {
       res.status(404).json({
         message: "Bạn không có quyền truy cập",

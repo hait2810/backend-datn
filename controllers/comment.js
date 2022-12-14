@@ -1,5 +1,6 @@
 import Comment from "../models/comment";
 import Product from "../models/product";
+import Order from "../models/orders";
 
 export const list = async (req, res) => {
   try {
@@ -36,9 +37,18 @@ export const remove = async (req, res) => {
 };
 export const create = async (req, res) => {
   try {
+    const order = await Order.findOne({ userID: req.profile._id.toString() });
+    console.log(order);
+    if (!order) {
+      return res.status(400).json({
+        message: "Khong co quyen",
+      });
+    }
     const comment = await new Comment(req.body).save();
+
     res.json(comment);
   } catch (error) {
+    console.log(error);
     res.status(400).json({
       message: "KHông thêm được",
     });

@@ -12,6 +12,7 @@ import {
   thongKeByMonth,
   thongKeByYear,
   thongke_tong,
+  total_quantity_statisticar,
   updateProduct,
   updateQuantityProduct,
   updateType,
@@ -26,6 +27,7 @@ router.post("/products", listProduct);
 router.post("/product/filter", filter_product);
 router.post("/products/search", search);
 router.get("/product/:id", readProduct);
+router.post("/product/quantity", total_quantity_statisticar);
 router.post("/countproduct", countNumberProduct);
 router.delete("/product/:id", requireSignin, isAuth, isAdmin, removeProduct);
 router.put("/product/:id", requireSignin, isAuth, isAdmin, updateProduct);
