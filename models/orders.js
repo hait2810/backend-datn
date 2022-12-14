@@ -58,14 +58,15 @@ const ordersSchema = new mongoose.Schema(
       default: 0
     },
     voucher: {
-      type: ObjectId,
-      ref: "Discount"
+      type: String
     },
     status: {
       type: Number,
       default: 0,
     },
-    
+    linkpay: {
+      type: String
+    }
   },
   { timestamps: true }
 );
