@@ -1,7 +1,8 @@
 import { ObjectId, Types } from "mongoose";
 import Product from "../models/product";
 import Order from "../models/orders";
-
+import User from "../models/user";
+import Post from "../models/post";
 export const createProduct = async (req, res) => {
   try {
     const products = await new Product(req.body).save();
@@ -12,12 +13,26 @@ export const createProduct = async (req, res) => {
     });
   }
 };
+export const total_quantity_statisticar = async (req, res) => {
+  try {
+    const products = await Product.find({}).count();
+    const orders = await Order.find({}).count();
+    const users = await User.find({}).count();
+    const posts = await Post.find({}).count();
+    res.json({ products, orders, users, posts });
+  } catch (error) {
+    res.status(400).json({
+      message: "Không tìm đc dữ liệu",
+    });
+  }
+};
 
 export const thongke = async (req, res) => {
   try {
     const body = req.body;
-    const count = await Product.find({}).count();
+
     const skip = body.limit * (body.page - 1);
+
     const all = await Product.aggregate([
       // {
       //   $match: {
@@ -83,6 +98,14 @@ export const thongke = async (req, res) => {
       },
       { $sort: { sold: -1 } },
     ]).limit(5);
+
+    // orders.map((order) => {
+    //   totalOrder.choxacnhan += order.status(1);
+    //   totalOrder.cholayhang += order.status(2);
+    //   totalOrder.danggiaohang += order.status(3);
+    //   totalOrder.dagiahang += order.status(4);
+    //   totalOrder.trahang += order.status(5);
+    // });
 
     const total = {
       quantity: 0,
