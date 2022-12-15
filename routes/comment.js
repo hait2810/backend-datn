@@ -5,6 +5,7 @@ import {
   create,
   getByProduct,
   list,
+  listComment,
   read,
   remove,
   update,
@@ -13,6 +14,7 @@ import {
 const router = express.Router();
 
 router.get("/comment", list);
+router.get("/comments", listComment);
 router.get("/comment/getByProduct/:id", getByProduct);
 router.get("/comment/:id", read);
 router.delete("/comment/:id", requireSignin, isAuth, remove);
