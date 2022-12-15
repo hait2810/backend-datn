@@ -15,6 +15,7 @@ import {
   total_quantity_statisticar,
   updateProduct,
   updateQuantityProduct,
+  updateQuantityProduct2,
   updateType,
 } from "../controllers/product";
 import { isAdmin, isAuth, requireSignin } from "../middlewares/checkAuth";
@@ -32,5 +33,6 @@ router.post("/countproduct", countNumberProduct);
 router.delete("/product/:id", requireSignin, isAuth, isAdmin, removeProduct);
 router.put("/product/:id", requireSignin, isAuth, isAdmin, updateProduct);
 router.put("/updatequantity/", updateQuantityProduct);
+router.put("/updatequantity2/", updateQuantityProduct2);
 router.put("/updatetype/:idt/:idp", updateType);
 export default router;

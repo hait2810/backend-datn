@@ -324,6 +324,36 @@ export const updateQuantityProduct = async (req, res) => {
   }
 };
 
+
+
+export const updateQuantityProduct2 = async (req, res) => {
+  try {
+    const { _id, color, size, quantity } = req.body;
+
+    const product = await Product.findById(_id).exec();
+
+    const newType = product.type.map((type) => {
+      if (type.color === color && type.size === size) {
+        
+        return {
+          ...type,
+          quantity: type.quantity + quantity,
+        };
+      }
+      return type;
+    });
+    product.sold = product.sold - quantity;
+    product.type = newType;
+    const resp = await Product.findByIdAndUpdate(_id, product, {
+      returnDocument: "after",
+    }).exec();
+
+    res.json(resp);
+  } catch (error) {
+    res.json(error);
+  }
+};
+
 export const updateType = async (req, res) => {
   try {
     const product = await Product.findOne({ _id: req.params.idp }).exec();

@@ -1,5 +1,5 @@
 import express from 'express'
-import { addNewOrder, editOrder, listOrder, readOrder, removeOrder, searchOrder } from '../controllers/orders'
+import { addNewOrder, countOrder, editOrder, listOrder, readOrder, removeOrder, searchOrder } from '../controllers/orders'
 
 const router = express.Router()
 
@@ -9,5 +9,6 @@ router.get("/orders",listOrder)
 router.get("/orders/:id", readOrder)
 router.delete("/orders/:id", removeOrder)
 router.post("/orderfind/", searchOrder)
+router.get("/countorder/:status", countOrder)
 
 export default router
