@@ -40,7 +40,12 @@ export const readPosts = async (req, res) => {
 };
 export const filter_post = async (req, res) => {
   try {
-    const count = await Posts.find({}).count();
+    const count = await Posts.find({
+      title: {
+        $regex: req.body.title,
+        $options: "i",
+      },
+    }).count();
     const Post = await Posts.find({
       title: {
         $regex: req.body.title,

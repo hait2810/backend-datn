@@ -159,7 +159,7 @@ export const thongke = async (req, res) => {
     });
     all.forEach((product) => {});
     total.doanhthu = total.total_export_price - total.total_import_price;
-    const list = thongkeorder.slice(0, 1);
+    const list = thongkeorder.slice(0, 3);
     res.json({ list, total });
   } catch (error) {
     console.log(error);
@@ -233,7 +233,8 @@ export const listProduct = async (req, res) => {
     const products = await Product.find({})
       .skip(skip)
       .limit(body.limit)
-      .populate("categoryId").sort({createdAt: -1});
+      .populate("categoryId")
+      .sort({ createdAt: -1 });
     res.json({ products, count });
   } catch (error) {
     res.status(400).json({
@@ -241,7 +242,27 @@ export const listProduct = async (req, res) => {
     });
   }
 };
-
+export const listProductadmin = async (req, res) => {
+  try {
+    const body = req.body;
+    const count = await await Product.find({
+      status: "ACTIVE",
+    }).count();
+    const skip = body.limit * (body.page - 1);
+    const products = await Product.find({
+      status: "ACTIVE",
+    })
+      .skip(skip)
+      .limit(body.limit)
+      .populate("categoryId")
+      .sort({ createdAt: -1 });
+    res.json({ products, count });
+  } catch (error) {
+    res.status(400).json({
+      message: "Không hiển thị sản phẩm",
+    });
+  }
+};
 export const readProduct = async (req, res) => {
   try {
     const Products = await Product.findOne({ _id: req.params.id }).exec();
@@ -324,8 +345,6 @@ export const updateQuantityProduct = async (req, res) => {
   }
 };
 
-
-
 export const updateQuantityProduct2 = async (req, res) => {
   try {
     const { _id, color, size, quantity } = req.body;
@@ -334,7 +353,6 @@ export const updateQuantityProduct2 = async (req, res) => {
 
     const newType = product.type.map((type) => {
       if (type.color === color && type.size === size) {
-        
         return {
           ...type,
           quantity: type.quantity + quantity,
