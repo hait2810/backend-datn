@@ -242,7 +242,27 @@ export const listProduct = async (req, res) => {
     });
   }
 };
-
+export const listProductadmin = async (req, res) => {
+  try {
+    const body = req.body;
+    const count = await await Product.find({
+      status: "ACTIVE",
+    }).count();
+    const skip = body.limit * (body.page - 1);
+    const products = await Product.find({
+      status: "ACTIVE",
+    })
+      .skip(skip)
+      .limit(body.limit)
+      .populate("categoryId")
+      .sort({ createdAt: -1 });
+    res.json({ products, count });
+  } catch (error) {
+    res.status(400).json({
+      message: "Không hiển thị sản phẩm",
+    });
+  }
+};
 export const readProduct = async (req, res) => {
   try {
     const Products = await Product.findOne({ _id: req.params.id }).exec();

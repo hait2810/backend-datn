@@ -35,6 +35,27 @@ export const read = async (req, res) => {
     });
   }
 };
+export const filter_comment = async (req, res) => {
+  try {
+    const count = await Comment.find({
+      content: {
+        $regex: req.body.content,
+        $options: "i",
+      },
+    }).count();
+    const Comments = await Comment.find({
+      content: {
+        $regex: req.body.content,
+        $options: "i",
+      },
+    });
+    res.json({ Comments, count });
+  } catch (error) {
+    res.status(400).json({
+      error: "Không tìm được Bình luận",
+    });
+  }
+};
 
 export const remove = async (req, res) => {
   try {
