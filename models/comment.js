@@ -24,9 +24,19 @@ commentSchema.pre(/^find/, function (next) {
       _id: 1,
       fullname: 1,
       img: 1,
+      email: 1,
     },
   });
-
+  next();
+});
+commentSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "product",
+    select: {
+      _id: 1,
+      name: 1,
+    },
+  });
   next();
 });
 
@@ -34,6 +44,12 @@ commentSchema.virtual("user", {
   ref: "User",
   foreignField: "_id",
   localField: "userId",
+  justOne: true,
+});
+commentSchema.virtual("product", {
+  ref: "Product",
+  foreignField: "_id",
+  localField: "productId",
   justOne: true,
 });
 
