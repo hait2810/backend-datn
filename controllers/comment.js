@@ -37,6 +37,8 @@ export const read = async (req, res) => {
 };
 export const filter_comment = async (req, res) => {
   try {
+    const body = req.body;
+    const skip = body.limit * (body.page - 1);
     const count = await Comment.find({
       content: {
         $regex: req.body.content,
@@ -48,7 +50,9 @@ export const filter_comment = async (req, res) => {
         $regex: req.body.content,
         $options: "i",
       },
-    });
+    })
+      .skip(skip)
+      .limit(body.limit);
     res.json({ Comments, count });
   } catch (error) {
     res.status(400).json({

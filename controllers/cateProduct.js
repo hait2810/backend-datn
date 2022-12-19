@@ -21,6 +21,18 @@ export const listCate = async (req, res) => {
     });
   }
 };
+export const listCates = async (req, res) => {
+  try {
+    const Cateproduct = await CateProducts.find({
+      status: "ACTIVE",
+    });
+    res.json(Cateproduct);
+  } catch (error) {
+    res.status(400).json({
+      message: "Không hiển thị sản phẩm",
+    });
+  }
+};
 
 export const readCate = async (req, res) => {
   try {
