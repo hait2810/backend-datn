@@ -184,6 +184,8 @@ export const search = async (req, res) => {
 
 export const filter_product = async (req, res) => {
   try {
+    const body = req.body;
+    const skip = body.limit * (body.page - 1);
     const count = await Product.find({
       name: {
         $regex: req.body.name,
@@ -215,7 +217,9 @@ export const filter_product = async (req, res) => {
           },
         },
       },
-    });
+    })
+      .skip(skip)
+      .limit(body.limit);
     res.json({ products, count });
   } catch (error) {
     console.log(error);
