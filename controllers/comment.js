@@ -18,6 +18,7 @@ export const listComment = async (req, res) => {
     const skip = body.limit * (body.page - 1);
     const count = await Comment.find({}).count();
     const Comments = await Comment.find({}).skip(skip).limit(body.limit);
+
     res.json({ Comments, count });
   } catch (error) {
     res.status(400).json({
