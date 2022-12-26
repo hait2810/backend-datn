@@ -4,6 +4,7 @@ import {
   createProduct,
   filter_product,
   listProduct,
+  listProductadmin,
   readProduct,
   removeProduct,
   search,
@@ -24,7 +25,8 @@ const router = express.Router();
 
 router.post("/product", requireSignin, isAuth, isAdmin, createProduct);
 router.post("/thongke", requireSignin, isAuth, isAdmin, thongke);
-router.post("/products", listProduct);
+router.post("/productadmin", listProduct);
+router.post("/products", listProductadmin);
 router.post("/product/filter", filter_product);
 router.post("/products/search", search);
 router.get("/product/:id", readProduct);

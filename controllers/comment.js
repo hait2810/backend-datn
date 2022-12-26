@@ -12,6 +12,20 @@ export const list = async (req, res) => {
     });
   }
 };
+export const listComment = async (req, res) => {
+  try {
+    const body = req.body;
+    const skip = body.limit * (body.page - 1);
+    const count = await Comment.find({}).count();
+    const Comments = await Comment.find({}).skip(skip).limit(body.limit);
+
+    res.json({ Comments, count });
+  } catch (error) {
+    res.status(400).json({
+      message: "Không hiển thị ",
+    });
+  }
+};
 export const read = async (req, res) => {
   try {
     const comment = await Comment.findOne({ _id: req.params.id });
@@ -19,6 +33,31 @@ export const read = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: "khong list duoc danh sach",
+    });
+  }
+};
+export const filter_comment = async (req, res) => {
+  try {
+    const body = req.body;
+    const skip = body.limit * (body.page - 1);
+    const count = await Comment.find({
+      content: {
+        $regex: req.body.content,
+        $options: "i",
+      },
+    }).count();
+    const Comments = await Comment.find({
+      content: {
+        $regex: req.body.content,
+        $options: "i",
+      },
+    })
+      .skip(skip)
+      .limit(body.limit);
+    res.json({ Comments, count });
+  } catch (error) {
+    res.status(400).json({
+      error: "Không tìm được Bình luận",
     });
   }
 };

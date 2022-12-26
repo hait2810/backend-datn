@@ -8,6 +8,10 @@ const CateProductSchema = new Schema(
     image: {
       type: String,
     },
+    status: {
+      type: String,
+      default: "ACTIVE",
+    },
   },
   { timestamps: true }
 );
