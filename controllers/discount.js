@@ -96,40 +96,39 @@ export const checkVoucher = async (req, res) => {
     const timecreate = moment().unix() - timecreateat; // tính số ngày tạo tài khoản
     const startday = moment(findVoucher.startday).unix(); // thời gian bắt đầu voucher
     const endtime = moment(findVoucher.endtime).unix(); // thời gian kết thúc  voucher
-    if (findVoucher.numberoftimesused >= findVoucher.numberofuses) {
-      return res.json({
-        code: 495,
-        message: "Voucher đã hết số lần sử dụng",
-      });
-    }
-    if (moment().unix() > endtime) {
-      return res.json({
-        code: 496,
-        message: "Voucher này chỉ áp dụng đến 00 giờ " + findVoucher.endtime,
-      });
-    }
-    if (startday > moment().unix()) {
-      return res.json({
-        code: 498,
-        message: "Voucher này áp dụng từ " + findVoucher.startday,
-      });
-    }
-    if (parseInt(timecreate / 86400) < findVoucher.timeuser) {
-      return res.json({
-        code: 499,
-        message:
-          "Tài khoản phải lập trên " +
-          findVoucher.timeuser +
-          " ngày thì mới được sử dụng mã này",
-      });
-    }
-    if (findOrder.length >= findVoucher.limiteduse) {
-      return res.json({
-        code: 500,
-        message:
-          "Mỗi user chỉ được sử dụng " + findVoucher.limiteduse + " lần.",
-      });
-    }
+    if(!req.body.view) {
+
+      if(findVoucher.numberoftimesused >= findVoucher.numberofuses) {
+          return res.json({
+              code: 495,
+              message: "Voucher đã hết số lần sử dụng"
+          })
+      }
+      if(moment().unix() > endtime) {
+          return res.json({
+              code: 496,
+              message: "Voucher này chỉ áp dụng đến 00 giờ " + findVoucher.endtime
+          })
+      }
+      if(startday > moment().unix()) { 
+          return res.json({
+              code: 498,
+              message: "Voucher này áp dụng từ " + findVoucher.startday
+          })
+      }
+      if(parseInt(timecreate/86400) < findVoucher.timeuser) {
+          return res.json({
+              code: 499,
+              message: "Tài khoản phải lập trên " + findVoucher.timeuser + " ngày thì mới được sử dụng mã này"
+          })
+      }
+      if(findOrder.length >= findVoucher.limiteduse) {
+          return res.json({
+              code: 500,
+              message: "Mỗi user chỉ được sử dụng " + findVoucher.limiteduse + " lần."
+          }) 
+      }
+  }
 
     if (req.body.update == true) {
       findVoucher.numberoftimesused++;
