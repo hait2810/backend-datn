@@ -18,7 +18,7 @@ import { isAdmin, isAuth, requireSignin } from "../middlewares/checkAuth";
 import { isValidPassResetToken } from "../middlewares/user";
 
 router.post("/users", listUser);
-router.put("/user/:id", requireSignin, isAuth, isAdmin, updateUsers);
+router.put("/user/:id", requireSignin, isAuth, updateUsers);
 router.get("/user/:id", readUser);
 router.post("/signup", signup);
 router.post("/signin", signin);
